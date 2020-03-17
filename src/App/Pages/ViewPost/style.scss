@@ -1,0 +1,13 @@
+.view-post {
+  margin-bottom: 40px;
+  &__content {
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+  }
+  &__title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+}
