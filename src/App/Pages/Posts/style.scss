@@ -1,7 +1,29 @@
+$size-md: 768px;
+$size-sm: 576px;
+
+@mixin media-interval($min, $max) {
+  @if $max == 0 {
+    $max: 9999px;
+  }
+
+  @media (min-width: ($min + 1px)) and (max-width: $max) {
+    @content;
+  }
+}
+
 .posts {
   &__content {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
     grid-gap: 20px;
+
+    @include media-interval($size-md, 0) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @include media-interval($size-sm, $size-md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @include media-interval(0, $size-sm) {
+      grid-template-columns: 1fr;
+    }
   }
 }

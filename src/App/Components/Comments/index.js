@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import "./style.scss";
+import {dataInteraction} from "../fetchs";
 
 class Comments extends Component {
   constructor(props) {
@@ -14,29 +15,24 @@ class Comments extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    let options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json;charset=utf-8"
-      },
-      body: JSON.stringify({
+    dataInteraction(
+      "POST",
+      {
         "postId": this.props.id,
         "body": this.textInput.current.value
-      })
-    };
-
-    fetch("https://simpleblogapi.herokuapp.com/comments", options)
-      .then(response => response.text())
-      .then(result => {
-        console.log(result);
+      },
+      "comments",
+      () => {
+        dataInteraction(
+          "GET",
+          null,
+          `posts/${this.props.id}?_embed=comments`,
+          (result) => this.props.getPost(result),
+          (error) => console.log(error)
+        );
         this.textInput.current.value = '';
-        fetch(`https://simpleblogapi.herokuapp.com/posts/${this.props.id}?_embed=comments`)
-          .then(res => {
-            return res.json();
-          })
-          .then(result => this.props.getPost(result));
-      })
-      .catch(error => console.log('error', error));
+      },
+    );
   };
 
   render() {

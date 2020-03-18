@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import "./style.scss";
+import {dataInteraction} from "../fetchs";
 
 class CreatePost extends Component {
 
@@ -18,30 +19,29 @@ class CreatePost extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    let options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json;charset=utf-8"
-      },
-      body: JSON.stringify({
-        "title": this.textInputOne.current.value,
-        "body": this.textInputTwo.current.value
-      })
-    };
+    let postTitle = this.textInputOne.current.value;
+    let postBody = this.textInputTwo.current.value;
 
-    fetch("https://simpleblogapi.herokuapp.com/posts", options)
-      .then(response => response.text())
-      .then(() => {
-        this.textInputOne.current.value = '';
-        this.textInputTwo.current.value = '';
+    dataInteraction(
+      "POST",
+      {
+        "title": postTitle,
+        "body": postBody
+      },
+      "posts",
+      () => {
+        dataInteraction(
+          "GET",
+          null,
+          "posts",
+          (result) => this.props.getPosts(result),
+          (error) => console.log(error)
+        );
+        postTitle = '';
+        postBody = '';
         this.setState({openEditing: false});
-        fetch("https://simpleblogapi.herokuapp.com/posts")
-          .then(res => {
-            return res.json();
-          })
-          .then(result => this.props.getPosts(result));
-      })
-      .catch(error => console.log('error', error));
+      },
+    );
   };
 
 
@@ -53,9 +53,19 @@ class CreatePost extends Component {
         {
           openEditing
             ? <form className="create-post__form" onSubmit={this.handleSubmit}>
-              <input className="create-post__input" required type="text" placeholder="Заголовок поста" ref={this.textInputOne}/>
-              <input className="create-post__input" required type="text" placeholder="Тело поста" ref={this.textInputTwo}/>
-              <button className="create-post__button">Создать пост</button>
+              <input className="create-post__input"
+                     required
+                     type="text"
+                     placeholder="Заголовок поста"
+                     ref={this.textInputOne}/>
+              <input className="create-post__input"
+                     required
+                     type="text"
+                     placeholder="Тело поста"
+                     ref={this.textInputTwo}/>
+              <button className="create-post__button">
+                Создать пост
+              </button>
             </form>
             : <div className="create-post__plus">
               Создать новый пост

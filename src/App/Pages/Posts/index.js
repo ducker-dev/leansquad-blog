@@ -1,20 +1,23 @@
 import React, {Component} from 'react';
 
 import "./style.scss";
-import Post from "../../Components/Post";
 import PageHeader from "../../Components/PageHeader";
+import Post from "../../Components/Post";
+import CreatePost from "../../Components/CreatePost";
 
 import {connect} from "react-redux";
-import {getPosts} from "../../../Redux/actions"
-import CreatePost from "../../Components/CreatePost";
+import {getPosts} from "../../../Redux/actions";
+import {dataInteraction} from "../../Components/fetchs"
 
 class Posts extends Component {
   componentDidMount() {
-    fetch("https://simpleblogapi.herokuapp.com/posts")
-      .then(res => {
-        return res.json();
-      })
-      .then(result => this.props.getPosts(result));
+    dataInteraction(
+      "GET",
+      null,
+      "posts",
+      (result) => this.props.getPosts(result),
+      (error) => console.log(error)
+    );
   }
 
   render() {
