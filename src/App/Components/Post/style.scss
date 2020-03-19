@@ -1,46 +1,120 @@
 .post {
   position: relative;
 
+  .post__del-post_visible, .post__change-post_visible {
+    opacity: 1;
+  }
+
   &:hover {
     cursor: pointer;
+
     .post__link {
       box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
     }
-    .post__del-post {
-      opacity: 1;
-      &:hover {
-        background-color: crimson;
-        color: #fff;
-      }
-    }
   }
 
-  &__del-post {
+  &__show-option {
     width: 30px;
     height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
-    right: -10px;
-    top: -10px;
+    top: 0;
+    right: 5px;
+    color: gray;
+    font-size: 20px;
+    transition: color .5s;
+
+    &:hover {
+      color: #000;
+    }
+  }
+
+  &__del-post, &__change-post {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
     border-radius: 15px;
     font-size: 18px;
     background-color: #fff;
-    color: #000;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    opacity: 0;
     transition: all .5s;
+
+    svg path {
+      transition: fill .5s;
+    }
+
+    &:hover svg path {
+      fill: #fff;
+    }
   }
 
-  &__link {
+  &__del-post {
+    top: -15px;
+    right: 10px;
+
+    &:hover {
+      background-color: crimson;
+    }
+  }
+
+  &__change-post {
+    top: 10px;
+    right: -15px;
+
+    &:hover {
+      background-color: #2178df;
+    }
+  }
+
+  &__link, &__wrapper-form {
     display: block;
-    padding: 20px;
     box-sizing: border-box;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
     border-radius: 20px;
     text-decoration: none;
     transition: box-shadow .5s;
+  }
+
+  &__link {
+    padding: 20px 40px 20px 20px;
+  }
+
+  &__wrapper-form {
+    display: flex;
+    padding: 20px;
+  }
+
+  &__change-form {
+    margin: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  &__input {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid;
+    margin-bottom: 10px;
+  }
+
+  &__button {
+    padding: 5px 20px;
+    background-color: #2179DF;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color .5s;
+
+    &:hover {
+      background-color: #295ab4;
+    }
   }
 
   &__title {
