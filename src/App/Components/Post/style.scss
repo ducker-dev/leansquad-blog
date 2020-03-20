@@ -22,9 +22,13 @@
     position: absolute;
     top: 0;
     right: 5px;
+    background-color: transparent;
+    border: none;
+    padding: 0;
     color: gray;
     font-size: 20px;
     transition: color .5s;
+    cursor: pointer;
 
     &:hover {
       color: #000;
@@ -41,8 +45,11 @@
     border-radius: 15px;
     font-size: 18px;
     background-color: #fff;
+    border: none;
+    padding: 0;
+    cursor: pointer;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    transition: all .5s;
+    transition: background-color .5s;
 
     svg path {
       transition: fill .5s;

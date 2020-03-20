@@ -27,10 +27,12 @@ class Comments extends Component {
           "GET",
           null,
           `posts/${this.props.id}?_embed=comments`,
-          (result) => this.props.getPost(result),
+          (result) => {
+            this.props.getPost(result);
+            this.textInput.current.value = '';
+          },
           (error) => console.log(error)
         );
-        this.textInput.current.value = '';
       },
     );
   };

@@ -9,10 +9,9 @@ class CreatePost extends Component {
 
     this.textInputOne = React.createRef();
     this.textInputTwo = React.createRef();
+    this.createPostRef = React.createRef();
     this.state = {
-      openEditing: false,
-      inputValueOne: '',
-      inputValueTwo: ''
+      openEditing: false
     }
   }
 
@@ -29,7 +28,7 @@ class CreatePost extends Component {
         "body": postBody
       },
       "posts",
-      () => {
+      (result) => {
         dataInteraction(
           "GET",
           null,
@@ -44,12 +43,29 @@ class CreatePost extends Component {
     );
   };
 
+  handleClickOutside = e => {
+    if (!this.createPostRef.current.contains(e.target)) {
+      this.setState({openEditing: false});
+      document.removeEventListener("click", this.handleClickOutside);
+    }
+  };
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.state.openEditing && !prevState.openEditing) {
+      document.addEventListener("click", this.handleClickOutside)
+    }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("click", this.handleClickOutside)
+  }
 
   render() {
     const {openEditing} = this.state;
-
     return (
-      <div className="create-post" onClick={() => this.setState({openEditing: true})}>
+      <div className="create-post"
+           ref={this.createPostRef}
+           onClick={() => this.setState({openEditing: true})}>
         {
           openEditing
             ? <form className="create-post__form" onSubmit={this.handleSubmit}>
