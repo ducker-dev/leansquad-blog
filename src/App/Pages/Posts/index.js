@@ -10,14 +10,26 @@ import {getPosts} from "../../../Redux/actions";
 import {dataInteraction} from "../../Components/fetchs"
 
 class Posts extends Component {
+
+  /**
+   * @method getDataPosts
+   * @return {void}
+   */
+  getPosts = async () => {
+    try {
+      const posts = await dataInteraction(
+        "GET",
+        null,
+        "posts"
+      );
+      this.props.getPosts(posts);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   componentDidMount() {
-    dataInteraction(
-      "GET",
-      null,
-      "posts",
-      (result) => this.props.getPosts(result),
-      (error) => console.log(error)
-    );
+    this.getPosts();
   }
 
   render() {
@@ -30,13 +42,15 @@ class Posts extends Component {
             <h1>Posts</h1>
             <div className="posts__content">
               {
-                posts.length === 0
-                  ? <div>Загрузка...</div>
-                  : posts.map(post => <Post key={post.id} {...post}
-                                            posts={posts}
-                                            getPosts={getPosts}/>)
+                posts && posts.length > 0
+                  ? posts.map(post => (
+                    <Post key={post.id} {...post}
+                          posts={posts}
+                          getPosts={getPosts}/>
+                  ))
+                  : <div>Загрузка...</div>
               }
-              <CreatePost getPosts={getPosts} posts={posts} />
+              <CreatePost getPosts={getPosts} posts={posts}/>
             </div>
           </div>
         </div>

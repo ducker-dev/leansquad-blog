@@ -9,7 +9,6 @@ import {createStore} from "redux";
 import changeState from "./Redux/reducers";
 
 const store = createStore(changeState);
-console.log(store);
 
 ReactDOM.render(
   <BrowserRouter>

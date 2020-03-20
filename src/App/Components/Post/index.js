@@ -19,41 +19,52 @@ class Post extends Component {
     }
   }
 
-  changeForm = e => {
+  changePost = async (e) => {
     e.preventDefault();
 
     let postTitle = this.textInputOne.current.value;
     let postBody = this.textInputTwo.current.value;
 
-    dataInteraction(
-      "PUT",
-      {
-        "title": postTitle,
-        "body": postBody
-      },
-      `posts/${this.props.id}`,
-      (result) => {
-        const modifiedPost = JSON.parse(result);
-        let oldPosts = this.props.posts.slice();
+    try {
+      const modifiedPost = await dataInteraction(
+        "PUT",
+        { "title": postTitle, "body": postBody },
+        `posts/${this.props.id}`
+      );
+      const {title, body, id} = JSON.parse(modifiedPost);
+      let oldPosts = [...this.props.posts];
 
-        if (modifiedPost.id) {
-          let postForChange = oldPosts.find(post => (
-            post.id === modifiedPost.id
-          ));
-          postForChange.title = modifiedPost.title;
-          postForChange.body = modifiedPost.body;
-          this.props.getPosts(oldPosts);
-          this.setState({change: false, showOption: false});
-        } else {
-          alert('Пост, который вы пытались изменить, был удален другим пользователем');
-          const newPosts = oldPosts.filter(post => post.id !== this.props.id);
-          this.props.getPosts(newPosts)
-        }
-      },
-      error => {
-        console.log(error);
+      if (id) {
+        this.props.getPosts(oldPosts.map(item => {
+          if(+item.id === +id)
+            return {...item, title, body};
+          else
+            return {...item};
+        }));
+        this.setState({change: false, showOption: false});
+        this.removeListeners();
+      } else {
+        alert('Пост, который вы пытались изменить, был удален другим пользователем');
+        const newPosts = oldPosts.filter(post => post.id !== this.props.id);
+        this.props.getPosts(newPosts)
       }
-    );
+    } catch (e) {
+      console.error(e)
+    }
+  };
+
+  deletePost = async () => {
+    try {
+      await dataInteraction(
+        "DELETE",
+        null,
+        `posts/${this.props.id}`
+      );
+      let oldPosts = [...this.props.posts];
+      this.props.getPosts(oldPosts.filter(post => post.id !== this.props.id));
+    } catch (e) {
+      console.error(e)
+    }
   };
 
   removeListeners = () => {
@@ -91,22 +102,21 @@ class Post extends Component {
   }
 
   render() {
-    const {id, title, body, getPosts} = this.props;
+    const {id, title, body} = this.props;
 
     return (
       <div className="post" ref={this.postRef}>
         {
           this.state.change
             ? <div className="post__wrapper-form">
-              <form className="post__change-form" onSubmit={this.changeForm}>
+              <form className="post__change-form"
+                    onSubmit={this.changePost}>
                 <input className="post__input"
                        required
-                       type="text"
                        defaultValue={title}
                        ref={this.textInputOne}/>
                 <input className="post__input"
                        required
-                       type="text"
                        defaultValue={body}
                        ref={this.textInputTwo}/>
                 <button className="post__button">
@@ -126,9 +136,7 @@ class Post extends Component {
         {
           !this.state.showOption && (
             <button className="post__show-option"
-                    onClick={() => {
-                      this.setState({showOption: true});
-                    }}>
+                    onClick={() => this.setState({showOption: true})}>
               ...
             </button>
           )
@@ -139,19 +147,7 @@ class Post extends Component {
               "post__del-post",
               {"post__del-post_visible": this.state.change}
             )}
-                    onClick={() => {
-                      dataInteraction(
-                        "DELETE",
-                        null,
-                        `posts/${id}`,
-                        () => {
-                          let oldPosts = this.props.posts.slice();
-                          const newPosts = oldPosts.filter(post => post.id !== this.props.id);
-                          this.props.getPosts(newPosts);
-                        },
-                        (error) => console.log(error)
-                      );
-                    }}
+                    onClick={() => this.deletePost()}
             >
               <svg width="12" height="15" viewBox="0 0 12 15" xmlns="http://www.w3.org/2000/svg">
                 <path

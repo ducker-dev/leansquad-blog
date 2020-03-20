@@ -15,33 +15,24 @@ class CreatePost extends Component {
     }
   }
 
-  handleSubmit = e => {
+  getNewPost = async (e) => {
     e.preventDefault();
 
     let postTitle = this.textInputOne.current.value;
     let postBody = this.textInputTwo.current.value;
 
-    dataInteraction(
-      "POST",
-      {
-        "title": postTitle,
-        "body": postBody
-      },
-      "posts",
-      (result) => {
-        console.log(this.props.posts);
-        let updatedPosts = this.props.posts.slice();
-        updatedPosts.push(JSON.parse(result));
-        this.props.getPosts(updatedPosts);
+    try {
+      const newPost = await dataInteraction(
+        "POST",
+        {"title": postTitle, "body": postBody},
+        "posts"
+      );
+      this.props.getPosts([...this.props.posts, JSON.parse(newPost)]);
+      this.setState({openEditing: false});
+    } catch (e) {
+      console.error(e)
+    }
 
-        postTitle = '';
-        postBody = '';
-        this.setState({openEditing: false});
-      },
-      error => {
-        console.log(error);
-      }
-    );
   };
 
   removeListeners = () => {
@@ -86,19 +77,18 @@ class CreatePost extends Component {
            onClick={() => this.setState({openEditing: true})}>
         {
           openEditing
-            ? <form className="create-post__form" onSubmit={this.handleSubmit}>
+            ? <form className="create-post__form"
+                    onSubmit={this.getNewPost}>
               <input className="create-post__input"
                      required
-                     type="text"
                      placeholder="Заголовок поста"
                      ref={this.textInputOne}/>
               <input className="create-post__input"
                      required
-                     type="text"
                      placeholder="Тело поста"
                      ref={this.textInputTwo}/>
               <button className="create-post__button">
-                Создать пост
+                Добавить пост
               </button>
             </form>
             : <div className="create-post__plus">
