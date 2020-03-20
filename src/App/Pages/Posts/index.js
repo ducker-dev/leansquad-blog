@@ -33,9 +33,10 @@ class Posts extends Component {
                 posts.length === 0
                   ? <div>Загрузка...</div>
                   : posts.map(post => <Post key={post.id} {...post}
+                                            posts={posts}
                                             getPosts={getPosts}/>)
               }
-              <CreatePost getPosts={getPosts} />
+              <CreatePost getPosts={getPosts} posts={posts} />
             </div>
           </div>
         </div>

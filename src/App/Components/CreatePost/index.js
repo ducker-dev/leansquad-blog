@@ -29,35 +29,53 @@ class CreatePost extends Component {
       },
       "posts",
       (result) => {
-        dataInteraction(
-          "GET",
-          null,
-          "posts",
-          (result) => this.props.getPosts(result),
-          (error) => console.log(error)
-        );
+        console.log(this.props.posts);
+        let updatedPosts = this.props.posts.slice();
+        updatedPosts.push(JSON.parse(result));
+        this.props.getPosts(updatedPosts);
+
         postTitle = '';
         postBody = '';
         this.setState({openEditing: false});
       },
+      error => {
+        console.log(error);
+      }
     );
+  };
+
+  removeListeners = () => {
+    document.removeEventListener("click", this.handleClickOutside);
+    document.removeEventListener("keydown", this.handleKeyUp);
+  };
+
+  addListeners = () => {
+    document.addEventListener("click", this.handleClickOutside);
+    document.addEventListener("keydown", this.handleKeyUp);
   };
 
   handleClickOutside = e => {
     if (!this.createPostRef.current.contains(e.target)) {
       this.setState({openEditing: false});
-      document.removeEventListener("click", this.handleClickOutside);
+      this.removeListeners();
+    }
+  };
+
+  handleKeyUp = e => {
+    if (e.keyCode === 27) {
+      this.setState({openEditing: false});
+      this.removeListeners();
     }
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.state.openEditing && !prevState.openEditing) {
-      document.addEventListener("click", this.handleClickOutside)
+      this.addListeners();
     }
   }
 
   componentWillUnmount() {
-    document.removeEventListener("click", this.handleClickOutside)
+    this.removeListeners();
   }
 
   render() {

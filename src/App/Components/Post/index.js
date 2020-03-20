@@ -32,36 +32,62 @@ class Post extends Component {
         "body": postBody
       },
       `posts/${this.props.id}`,
-      () => {
-        dataInteraction(
-          "GET",
-          null,
-          "posts",
-          (result) => {
-            this.props.getPosts(result);
-            this.setState({change: false, showOption: false});
-          },
-          (error) => console.log(error)
-        );
+      (result) => {
+        const modifiedPost = JSON.parse(result);
+        let oldPosts = this.props.posts.slice();
+
+        if (modifiedPost.id) {
+          let postForChange = oldPosts.find(post => (
+            post.id === modifiedPost.id
+          ));
+          postForChange.title = modifiedPost.title;
+          postForChange.body = modifiedPost.body;
+          this.props.getPosts(oldPosts);
+          this.setState({change: false, showOption: false});
+        } else {
+          alert('Пост, который вы пытались изменить, был удален другим пользователем');
+          const newPosts = oldPosts.filter(post => post.id !== this.props.id);
+          this.props.getPosts(newPosts)
+        }
       },
+      error => {
+        console.log(error);
+      }
     );
+  };
+
+  removeListeners = () => {
+    document.removeEventListener("click", this.handleClickOutside);
+    document.removeEventListener("keydown", this.handleKeyUp);
+  };
+
+  addListeners = () => {
+    document.addEventListener("click", this.handleClickOutside);
+    document.addEventListener("keydown", this.handleKeyUp);
   };
 
   handleClickOutside = e => {
     if (!this.postRef.current.contains(e.target)) {
       this.setState({change: false, showOption: false});
-      document.removeEventListener("click", this.handleClickOutside);
+      this.removeListeners();
+    }
+  };
+
+  handleKeyUp = e => {
+    if (e.keyCode === 27) {
+      this.setState({change: false, showOption: false});
+      this.removeListeners();
     }
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.state.showOption && !prevState.showOption) {
-      document.addEventListener("click", this.handleClickOutside)
+      this.addListeners();
     }
   }
 
   componentWillUnmount() {
-    document.removeEventListener("click", this.handleClickOutside)
+    this.removeListeners();
   }
 
   render() {
@@ -100,7 +126,9 @@ class Post extends Component {
         {
           !this.state.showOption && (
             <button className="post__show-option"
-                    onClick={() => this.setState({showOption: true})}>
+                    onClick={() => {
+                      this.setState({showOption: true});
+                    }}>
               ...
             </button>
           )
@@ -117,13 +145,9 @@ class Post extends Component {
                         null,
                         `posts/${id}`,
                         () => {
-                          dataInteraction(
-                            "GET",
-                            null,
-                            "posts",
-                            (result) => getPosts(result),
-                            (error) => console.log(error)
-                          );
+                          let oldPosts = this.props.posts.slice();
+                          const newPosts = oldPosts.filter(post => post.id !== this.props.id);
+                          this.props.getPosts(newPosts);
                         },
                         (error) => console.log(error)
                       );
