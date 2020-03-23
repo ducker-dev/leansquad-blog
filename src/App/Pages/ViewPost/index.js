@@ -5,16 +5,30 @@ import "./style.scss";
 import {connect} from "react-redux";
 import {getPost} from "../../../Redux/actions"
 import Comments from "../../Components/Comments";
+import {dataInteraction} from "../../Components/fetchs";
 
 class ViewPost extends Component {
-  componentDidMount() {
-    const id = this.props.match.params.id || "";
 
-    fetch(`https://simpleblogapi.herokuapp.com/posts/${id}?_embed=comments`)
-      .then(res => {
-        return res.json();
-      })
-      .then(result => this.props.getPost(result));
+  /**
+   * @method getPost
+   * @return {void}
+   */
+  getPosts = async () => {
+    const id = this.props.match.params.id || "";
+    try {
+      const post = await dataInteraction(
+        "GET",
+        null,
+        `posts/${id}?_embed=comments`
+      );
+      this.props.getPost(post);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  componentDidMount() {
+    this.getPosts();
   }
 
   componentWillUnmount() {

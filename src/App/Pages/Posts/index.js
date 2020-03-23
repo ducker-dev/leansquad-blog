@@ -12,7 +12,7 @@ import {dataInteraction} from "../../Components/fetchs"
 class Posts extends Component {
 
   /**
-   * @method getDataPosts
+   * @method getPosts
    * @return {void}
    */
   getPosts = async () => {
@@ -30,6 +30,10 @@ class Posts extends Component {
 
   componentDidMount() {
     this.getPosts();
+  }
+
+  componentWillUnmount() {
+    this.props.getPosts([])
   }
 
   render() {

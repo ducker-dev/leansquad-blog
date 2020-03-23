@@ -29,21 +29,3 @@ export async function dataInteraction(method, body, url) {
   }
 }
 
-async function f(method, body, url) {
-  let xhr = new XMLHttpRequest();
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.open(method, `${basePath}/${url}`, true);
-  body ? xhr.send(JSON.stringify(body)) : xhr.send();
-
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState != 4) return;
-
-    if (xhr.status != 200) {
-      alert(xhr.status + ': ' + xhr.statusText);
-    } else {
-      alert(xhr.responseText);
-    }
-
-  }
-}
-
