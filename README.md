@@ -1,68 +1,37 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## React / Redux in conjunction with the API
 
-## Available Scripts
+Hey, let's build simple Blog.
+We will start with simple MVP. It will have Posts and Comments features.
+Use React as view framework. JavaScript has to be ES 6+.
+State layer should be handled with Redux.
+Use React Router to manage routing.
 
-In the project directory, you can run:
+### Pages and Features
+#### Our blog going to have next pages:
+*	Latest Posts / -- List of all Posts, Post short description.
+*	View Post /posts/:postId -- Post page
+#### Features:
+*	View list of latest Posts
+*	View specific Post
+*	Create new comment under Post
+*	Create / Edit Post * Optional
 
-### `yarn start`
+### API
+To persist data and work with real API, we're going to use simple Node.js. API hosted in cloud and you can query it from anywhere. API endpoints documentation: https://documenter.getpostman.com/view/8417459/SzS1Tp1m?version=latest
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Structure and Code Style
+*	Split components to Presentational and Container components
+*	Redux action, reducers, and selectors should be separate from each other. To handle network you can use native browser fetch method and redux-thunk middleware. As another option we prefer is Axios.
+*	ES 6/7 features are very welcome. If you want to use async / await etc. go ahead and do it.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Design
+The design is up to you. Simple, minimalistic and clean would be nice. 
 
-### `yarn test`
+### Conditions
+*	Avoid use of jQuery and bootstrap. Native JS and flexbox nowadays solve all you need from these two.
+*	Task usually takes from 2 to 4 hours. If you need more time, you're good to take it and it's appreciated, but results should be sent no later than 24 hours after the start.
+*	Challenge code should be uploaded git repository to GitHub. Send us link to the repository right after that. Thanks!
+*	Skills to write great business logic evaluated higher than markup or styling.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+If you have any questions about challenge details, ask for details, it's appreciated.
+Have a good luck and looking forward to working with you!
